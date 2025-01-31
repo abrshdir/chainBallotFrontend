@@ -1,0 +1,147 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col"></div>
+    <div class="col">
+      <h1 class="display-4" style="color: #6A0DAD">Election 2028</h1>
+      <h4 class="text-success" style="color: #6A0DAD">Welcome to the 2028 election. </h4>
+    </div>
+    <div class="col"></div>
+  </div>
+  <div class="alert alert-success" role="alert">
+    <p class="lead">You can vote for your favorite party by clicking on the
+      respective button below. The results will be displayed in real-time. IF <strong>CONNECTING WALLET</strong> DOES
+      NOT WORK REFRESH THE PAGE!!</p>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-2 text-center">
+      <div class="alert alert-warning" role="alert">
+        The following dashboard allows you to vote by letting you pay through the Supra network. The government will
+        supply the token only for payment purposes one day before the election day starts.
+      </div>
+      <div class="card" style="width: 21rem">
+        <div class="alert alert-dark" role="alert">
+          <div class="card-body">
+            <h5 class="card-title">Why is the election system implemented on a blockchain?</h5>
+            <p class="card-text">Blockchain-based voting ensures trust, security, and transparency. Here’s why:</p>
+            <p class="card-text">
+              1. <strong>Transparency:</strong> Every vote is recorded on an immutable ledger, preventing fraud or
+              tampering.<br>
+              2. <strong>Security:</strong> Blockchain encryption ensures votes cannot be altered or hacked.<br>
+              3. <strong>Accessibility:</strong> Voters can securely cast their votes from anywhere with internet
+              access.<br>
+              4. <strong>Auditability:</strong> The system provides a verifiable and traceable voting process.<br>
+              5. <strong>Eliminates Central Control:</strong> Decentralized voting prevents manipulation by a single
+              authority.<br>
+            </p>
+            <a href="https://somegovernmentaloffice.com" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+
+      <div class="dashboard">
+        <div class="alert alert-info" role="alert">
+          <h5 style="color: #6A0DAD">Current Results Visualization Total Votes: <span id="total-votes">{{
+              stats?.totalVotes }}</span></h5>
+        </div>
+
+
+        <div class="results">
+          <div class="red-bar" [ngStyle]="{ width: (stats?.redVotes || 0) / (stats?.totalVotes || 1) * 100 + '%' }">
+            Red: {{ stats?.redVotes || 0 }}</div>
+
+          <div class="blue-bar" [ngStyle]="{ width: (stats?.blueVotes || 0) / (stats?.totalVotes || 1) * 100 + '%' }">
+            Blue: {{ stats?.blueVotes || 0}}</div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="gradient-effect red-party">
+            <img class="img-responsive" [src]="trump" alt="">
+            <h2>Vote for Red Party</h2>
+            <button class="btn btn-primary vote-button red" onclick="vote('red')" (click)="castVote('red')"
+              [disabled]="!stats?.isVotingOpen">Vote Red</button>
+          </div>
+        </div>
+        <div class="col">
+          <div class="gradient-effect blue-party">
+            <img class="img-responsive" [src]='obama' alt="Obama">
+            <h2>Vote for Blue Party</h2>
+            <button class="btn btn-primary vote-button blue" onclick="vote('blue')" (click)="castVote('blue')"
+              [disabled]="!stats?.isVotingOpen">Vote Blue</button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="col-md-2">
+      <div class="card">
+        <h5 class="card-header">You did not vote yet?</h5>
+        <div class="card-body">
+          <h5 class="card-title">You are American Citizen but abroad?, comfort of your home? or busy at work?</h5>
+          <p class="card-text">No problem just connect your registerd wallet address and vote now.</p>
+          <button class="btn btn-success" (click)="connectsWallet()" *ngIf="!walletAddress">
+            Connect Wallet
+          </button>
+          <button class="btn btn-danger" *ngIf="walletAddress" (click)="disconnectWallet()">Disconnect
+            wallet</button>
+          <h4 *ngIf="walletAddress" style="color: green;">Connected: {{ walletAddress }}</h4>
+          <h4 *ngIf="walletAddress && voterParty">You voted for: {{ voterParty | hexToText }}</h4>
+          <p *ngIf="walletAddress && !voterParty">You have not voted yet</p>
+        </div>
+      </div>
+      <br>
+      <div class="card" style="width: 21rem">
+        <div class="alert alert-dark" role="alert">
+          <div class="card-body">
+            <h5 class="card-title">Why is the election system implemented on the Supra blockchain?</h5>
+            <p class="card-text">
+              <strong>High Throughput & Low Latency:</strong> Supra blockchain can handle up to 500,000 transactions
+              per second (TPS) with sub-second finality, ensuring fast and scalable election processing for nationwide
+              voting.
+            </p>
+            <a href="https://supra.com/" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-danger" role="alert">
+        If you are not familiar with
+        this method, you can always vote at the station, and the government will cover the transaction fee/gas fee.
+        Please ask for more information at the station voting.
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row justify-content-center">
+    <div class="col">
+      <p class="text-primary">Addresses who voted for either of the parties. The list DOES NOT update in
+        real-time.</p>
+      <br>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Address</th>
+            <th scope="col">Party</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="votes">
+          <tr *ngFor="let vote of votes[0]; let i = index">
+            <th scope="row">i</th>
+            <td>{{ vote.voter }}</td>
+            <td>{{ vote.party | hexToText }}</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="votes.length == 0">
+          <tr>
+            <td colspan="3" class="text-center">No votes yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

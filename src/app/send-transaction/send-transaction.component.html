@@ -1,0 +1,5 @@
+<div *ngIf="walletService.getWalletAddress()">
+    <input [(ngModel)]="toAddress" placeholder="Recipient Address" />
+    <input [(ngModel)]="amount" placeholder="Amount in ETH" />
+    <button (click)="sendTransaction()">Send Transaction</button>
+  </div>
