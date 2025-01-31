@@ -50,6 +50,7 @@ export class VotingDashboardComponent implements OnInit {
     console.log('window :: ', window);
     if ('starkey' in window) {
       const provider = (window as any)?.starkey.supra;
+      console.log('provider :: ', provider);
       if (provider) {
         return provider;
       }

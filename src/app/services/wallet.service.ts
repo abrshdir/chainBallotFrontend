@@ -23,9 +23,21 @@ export class WalletService {
         console.log('Wallet connected:', this.address);
       }
     } else {
+      this.checkSupra();
       console.error('Supra Star Key Wallet not found!');
     }
   }
+
+  async checkSupra(attempts = 10) {
+    if ((window as any)?.starkey?.supra) {
+      this.supraProvider = (window as any).starkey.supra;
+      console.log("Supra wallet found:", this.supraProvider);
+    } else if (attempts > 0) {
+      setTimeout(() => this.checkSupra(attempts - 1), 500); // Check every 500ms, up to 10 times
+    } else {
+      console.warn("Supra wallet not found after 10 attempts.");
+    }
+  };
 
   async disconnectWallet(): Promise<void> {
     if (this.supraProvider) {
