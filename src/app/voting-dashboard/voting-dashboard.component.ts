@@ -35,6 +35,7 @@ export class VotingDashboardComponent implements OnInit {
 
 
   async connectsWallet() {
+    this.getProvider();
     await this.walletService.connectWallet();
     this.walletAddress = await this.walletService.getWalletAddress();
     if (this.walletAddress) {
@@ -46,14 +47,13 @@ export class VotingDashboardComponent implements OnInit {
   }
 
   private getProvider(): any {
+    console.log('window :: ', window);
     if ('starkey' in window) {
       const provider = (window as any)?.starkey.supra;
       if (provider) {
         return provider;
       }
     }
-
-    window.open('https://starkey.app/', '_blank');
   }
 
   /**
